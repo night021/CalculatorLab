@@ -23,7 +23,8 @@ namespace CPE200Lab1
         double Mpluse;
         double Mminus;
         double sum=0;
-        
+        private double memory;
+        private string temp;
         
  
         private void resetAll()
@@ -35,6 +36,7 @@ namespace CPE200Lab1
             isAfterEqual = false;
             firstOperand = null;
             sum = 0;
+            
         }
 
         
@@ -88,6 +90,7 @@ namespace CPE200Lab1
             operate = ((Button)sender).Text;
             firstOperand = lblDisplay.Text;
             string result = engine.unaryCalculate(operate, firstOperand);
+            string temp = operate;
             if (result is "E" || result.Length > 8)
             {
                 lblDisplay.Text = "Error";
@@ -109,31 +112,20 @@ namespace CPE200Lab1
             {
                 return;
             }
-            if(firstOperand != null)
-            {
-                string secondOperand = lblDisplay.Text;
-                string result = engine.calculate(operate, firstOperand, secondOperand);
-                if (result is "E" || result.Length > 8)
-                {
-                    lblDisplay.Text = "Error";
-                }
-                else
-                {
-                    lblDisplay.Text = result;
-                }
-            }
+
+            string result = engine.calculate(operate, firstOperand, secondOperand);
+            string temp = operate;
             operate = ((Button)sender).Text;
+
             switch (operate)
             {
                 case "+":
                 case "-":
                 case "X":
                 case "÷":
-                
-                    
                     if (firstOperand == null)
                     {
-                        firstOperand= lblDisplay.Text;
+                        firstOperand = lblDisplay.Text;
                         isAfterOperater = true;
                     }
                     else
@@ -151,6 +143,18 @@ namespace CPE200Lab1
                     operate = temp;
                     break;
 
+                case "√":
+                    firstOperand = lblDisplay.Text;
+                    lblDisplay.Text = (Math.Pow(Convert.ToDouble(firstOperand), 0.5)).ToString();
+                    isAfterOperater = true;
+                    break;
+
+                case "1/X":
+                    firstOperand = lblDisplay.Text;
+                    lblDisplay.Text = (1 / Convert.ToDouble(firstOperand)).ToString();
+                    isAfterOperater = true;
+                    break;
+
                 case "M+":
                     Mpluse = Convert.ToDouble(lblDisplay.Text);
                     sum = sum + Mpluse;
@@ -164,15 +168,14 @@ namespace CPE200Lab1
                     break;
                 case "MS":
                     sum = Convert.ToDouble(lblDisplay.Text);
-           
+
                     isAfterOperater = true;
                     break;
-
             }
             isAllowBack = false;
         }
 
-        private void btnEqual_Click(object sender, EventArgs e)
+            private void btnEqual_Click(object sender, EventArgs e)
         {
             if (lblDisplay.Text is "Error")
             {
@@ -284,6 +287,7 @@ namespace CPE200Lab1
         private void btnMC_Click(object sender, EventArgs e)
         {
             memory = 0;
+            resetAll();
         }
 
         private void btnMM_Click(object sender, EventArgs e)
